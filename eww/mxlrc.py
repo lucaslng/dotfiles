@@ -313,16 +313,6 @@ def main(args):
       break
 
   print('')
-  logging.info(f"Succesfully fetch {args.songs['count']-len(failed)} out of {args.songs['count']} lyrics.")
-  if failed:
-    logging.warning(f"Failed to fetch {len(failed)} lyrics.")
-    if args.mode == 'dir':
-      logging.warning("You can try again with the same command.")
-      return
-    logging.warning(f"Saving list of failed items in {run_time}_failed.txt. You can try again using this file as the input")
-    with open(f"{run_time}_failed.txt", "w", encoding="utf-8") as f:
-      f.writelines([f"{s.artist},{s.title}\n" for s in failed])
-
 
 def rename_logging_level_names():
   for level in list(logging._levelToName):
