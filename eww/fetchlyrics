@@ -13,7 +13,6 @@ do # main loop, follows what song is playing on spotify and reads the title
 	echo "$uglytitle"
     while [ "$uglytitle" = "$(playerctl --player spotify metadata xesam:title)" ] # loop is needed so it knows to go onto another lrc file when the song changes
     do
-		echo "hi"
         newlyrics=$(echo "$lyrics" | grep $(playerctl --player spotify position --format "{{ duration(position) }}") | cut -c 11- | tr -d '\n') # the next line of lyrics, ready to be displayed
         if [ "$oldlyrics" = "$newlyrics" ] || [ "$newlyrics" = "" ] ; then
             sleep 1 # checks if the lyrics have changed

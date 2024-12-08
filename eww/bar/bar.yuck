@@ -1,6 +1,6 @@
 (deflisten workspaces :initial "[]" "./get-workspaces")
 (deflisten current_workspace :initial "1" "./get-active-workspace")
-(deflisten lyrics :initial "?" "bash ~/.config/eww/lyrics.zsh")
+(deflisten lyrics :initial "?" "./fetchlyrics")
 (deflisten music :initial "-" "playerctl --player spotify --follow metadata --format '{{ artist }} - {{ title }}' || true")
 (defpoll time :interval "1s" "date '+%A, %B %d, %H:%M:%S'")
 (defvar vol "100")
