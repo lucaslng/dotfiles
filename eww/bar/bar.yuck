@@ -34,7 +34,7 @@
   (box :class "lyricsbox" :halign "start"
     (overlay
       (revealer :reveal lrcr :transition "crossfade" :duration "300ms"
-        (label :class "lyrics" :text {lyrics == "" ? "-" : lyrics})))))
+        (label :class "lyrics" :limit-width 150 :text {lyrics == "" ? "-" : lyrics})))))
 
 
 (defwidget left []

@@ -5,9 +5,9 @@ do # main loop, follows what song is playing on spotify and reads the title
 
     title=$(echo "$uglytitle" | cut -d '(' -f 1 | cut -d '.' -f 1 | cut -d '-' -f 1 | sed 's/\"//g' | sed 's/,//g' | sed 's/?//g') # title of song: Never Gonna Give You Up
     artist=$(playerctl --player spotify metadata xesam:artist) # artist of song: Your Mom
-    exa lyrics | grep -q "$title" || python mxlrc.py -s "$artist","$title" --token 221230b353bb68cf7c25aeadeb89fd8f5e4788a1a3a3009b638f75 -q # check if .lrc file already exists, if not, download it using python script
+    exa ~/.local/share/lyrics | grep -q "$title" || python mxlrc.py -o ~/.local/share/lyrics -s "$artist","$title" --token 221230b353bb68cf7c25aeadeb89fd8f5e4788a1a3a3009b638f75 -q # check if .lrc file already exists, if not, download it using python script
 	file=${$(exa lyrics | grep "$title")/\'/}
-    lyrics=$(sed -n '6,$p' "/home/lucas/.config/eww/lyrics/$file") # entire lyrics file: [00:00] blah blah blah
+    lyrics=$(sed -n '6,$p' "~/.local/share/lyrics/$file") # entire lyrics file: [00:00] blah blah blah
     oldlyrics=""
     newlyrics="-"
 	echo "$uglytitle"
