@@ -1,0 +1,29 @@
+; NOTIFICATIONS
+
+(deflisten notis :initial "" "./notis.zsh")
+(defvar notivisible true)
+
+(defwidget notibody [summary source body]
+  (eventbox :visible {notivisible}
+    (box :orientation "v" :class "notifications"
+      "${summary}"
+      "${source}"
+      "${body}")))
+
+(defwidget notibox []
+  (box :orientation "h"
+    (for noti in notis
+      (notibody :summary {$noti.summary} :source {$noti.source} :body {$noti.body}))))
+
+
+(defwindow notis
+  :monitor 0 
+  :stacking "overlay"
+  :geometry (geometry :x "12px"
+                      :y "12px"
+                      :width: "300px"
+                      :height: "100px"
+                      :anchor "top right")
+  :exclusive false
+  :focusable false
+  (notibox))

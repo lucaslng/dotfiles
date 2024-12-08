@@ -1,0 +1,5 @@
+#!/bin/sh
+
+eww update wifipopupshown=false
+sleep 0.30
+eww close wifipopup

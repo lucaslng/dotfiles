@@ -1,0 +1,10 @@
+#!/bin/bash
+
+nmcli d wifi rescan ifname wlan0
+networks=$(nmcli -c no -m multiline d wifi list ifname wlan0 --rescan auto | awk '/^SSID/ {print $2}' | sed ':a;N;$!ba;s/--\n//g' | head -n 12)
+length=$(echo $networks | wc -L)
+array=$(echo "[\""$(echo "$networks" | sed ':a;N;$!ba;s/\n/\", \"/g')"\"]" | jq '[.[] as $key | {($key): {ssid: ($key), visible: false, index: (index($key) + 1)}} | add] | unique')
+echo "$array" > networkjson.json
+eww open wifipopup
+eww update wifipopupshown=true
+eww update networks="$array"

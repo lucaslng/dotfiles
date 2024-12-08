@@ -1,0 +1,148 @@
+// eww bar scss
+
+// global
+
+*{
+    all: unset;
+}
+
+// variable colors
+
+$background: transparent;
+$foreground: #cdd6f4;
+
+$black: #1e1e2e;
+$gray: #313244;
+$lightgray: #585b70;
+$red: #f38ba8;
+$green: #a6e3a1;
+$yellow: #f9e2af;
+$blue: #89b4fa;
+$magenta: #cba6f7;
+$cyan: #89dceb;
+$white: $foreground;
+
+*{
+    font-family: "JetBrainsMono Nerd Font Mono";
+    font-weight: 500;
+    
+}
+
+// eww bar
+
+.eww_bar{
+   // padding: 2px 2px 2px 2px;
+}
+
+.bar {
+    background-color: $background;
+    margin: 4px 0px 0px 0px;
+}
+
+// workspaces
+
+.workspaces-widget {
+    margin: 0px 0px 0px 12px;
+    padding: 0px 5px 0px 5px;
+    background-color: $black;
+    border-radius: 8px;
+}
+
+.workspace-entry {
+    padding: 0px 8px 0px 8px;
+    font-size: 21px;
+    color: $gray;
+}
+
+.occupied {
+    color: $lightgray;
+}
+
+.current {
+    color: $foreground;
+}
+
+// lyrics
+
+.lyrics {
+    color: $foreground;
+}
+
+.lyricsbox {
+    background-color: $black;
+    border-radius: 8px;
+    padding: 0px 10px 0px 10px;
+    margin: 0px 10px 0px 0px;
+}
+
+.right {
+    background-color: $background;
+    color: $foreground;
+    padding: 0px 12px 0px 0px;
+}
+
+.time, .vol, .battery, .wifi, .wifipopup {
+    border-radius: 8px;
+    padding: 0px 10px 0px 10px;
+    font-size: 16px;
+    background-color: $black;
+    color: $foreground;
+}
+
+.wifipopup {
+  border-radius: 0px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  border-style: solid;
+  border-color: $blue;
+  border-width: 2px;
+  border-bottom-width: 1px;
+  border-top-width: 1px;
+  padding: 2px;
+  background-color: $blue;
+  // border-top-color: $black;
+}
+
+.wifipopupbuttons {
+  border-style: solid;
+  border-color: $blue;
+  border-width: 2px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  padding: 6px 10px;
+  border-radius: 11px;
+  background-color: $black;
+}
+
+.musicbox {
+    background-color: $black;
+    padding: 0px 20px 0px 20px;
+    border-radius: 8px;
+}
+
+.music {
+    color: $foreground;
+    font-size: 15px;
+}
+
+.musicbar scale trough highlight {
+    background-color: $blue;
+    border-radius: 5px;
+    min-height: 9px;
+    min-width: 0px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 10px 2px 10px;
+}
+
+
+// notifications
+
+.notifications {
+    background-color: $black;
+    border-color: $blue;
+    border-width: 8px;
+    color: $foreground;
+    border-radius: 16px;
+    border-style: solid;
+    padding: 10px;
+}

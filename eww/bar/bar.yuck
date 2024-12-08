@@ -1,0 +1,115 @@
+(deflisten workspaces :initial "[]" "./get-workspaces")
+(deflisten current_workspace :initial "1" "./get-active-workspace")
+(deflisten lyrics :initial "?" "bash ~/.config/eww/lyrics.zsh")
+(deflisten music :initial "-" "playerctl --player spotify --follow metadata --format '{{ artist }} - {{ title }}' || true")
+(defpoll time :interval "1s" "date '+%A, %B %d, %H:%M:%S'")
+(defvar vol "100")
+(defpoll wifi :interval "5s" "iwctl station wlan0 show | awk '/Connected network/ {print $3}'")
+; (deflisten battery-charging :initial "" "sh battery-charging.sh")
+; (defpoll battery :interval "5s" "./battery.sh")
+(deflisten musicpos :initial "0" "./musicpos.zsh")
+
+(defwidget bar []
+  (box :class "bar" :orientation "h"
+    (left)
+    (music)
+    (right)))
+
+;(defwidget workspacewidget []
+;  (box :space-evenly true :spacing 5 :class "workspaces-widget"
+;    (
+      
+
+
+(defwidget workspacewidget []
+  (eventbox :onscroll "bash ~/.config/eww/change-active-workspace {} ${current_workspace}"
+    (box :space-evenly true :spacing 5 :class "workspaces-widget"
+      (for workspace in workspaces
+        (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
+          (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : ""}"
+            (label :text "${workspace.icon}")))))))
+
+(defvar lrcr true)
+(defwidget lyrics []
+  (box :class "lyricsbox" :halign "start"
+    (overlay
+      (revealer :reveal lrcr :transition "crossfade" :duration "300ms"
+        (label :class "lyrics" :text {lyrics == "" ? "-" : lyrics})))))
+
+
+(defwidget left []
+  (box :halign "start" :orientation "h" :spacing 20 :space-evenly false
+    (workspacewidget)
+    (lyrics)))
+
+(defwidget music []
+  (eventbox :orientation "h" :space-evenly false :halign "center"
+    (overlay
+      (box :class "musicbox"
+        (label :class "music" :xalign 0.5 :yalign 0.2 :text {music == "" ? "-" : music}))
+      (box :class "musicbar" :valign "end"
+        (scale :active true :min 0.00 :max 100.00 :value musicpos)))))
+
+(defwidget time []
+  (button :halign "end" :hexpand false :class "time" time))
+
+(defvar wififade true)
+(defvar wifipopupshown false)
+(defvar wifislide false)
+(defvar networks "[]")
+(deflisten networklength "tail -qF networklength")
+
+(defwidget wifi []
+  (revealer :reveal wififade :transition "crossfade" :duration "390ms"
+    (overlay
+      (label :class "wifi" :style {wifipopupshown ? "border-bottom-left-radius:0px;border-bottom-right-radius:0px;border-style:solid;border-width:4px;border-color:#89b4fa": ""} :width {wifipopupshown ? (networklength * 7) : 0} :markup {wifi=='--' ? '<span font_size="32pt">󰖪</span>' : '<span font_size="16pt"></span> <span rise="3200">${wifi}</span>'})
+      (button :timeout "1000ms" :onclick {wifipopupshown ? "sh closewifipopup" : "sh networks"}))))
+
+(defwidget wifipopupwidget []
+  (revealer :halign "end" :reveal wifipopupshown :transition "slidedown" :duration "300ms"
+    (box :class "wifipopup" :orientation "v" :space-evenly true :width {networklength * 7}
+     (for network in networks 
+        (box :orientation "v" :class "wifipopupbuttons" :space-evenly false
+          (button :onclick "sh wifinetworkvisible ${network.index}" :halign "start" "${network["ssid"]}")
+          (revealer :reveal true :transition "slidedown"
+           (input :value "Password: " :timeout "400ms" :onaccept "eww update wifipopupshown=false && eww close wifipopup")))))))
+
+(defwidget volume []
+  (eventbox :onscroll "./changevol.zsh {}"
+    (box :orientation "h" :class "vol"
+      (label :markup '<span font_size="16pt"></span> ') 
+      (button :onclick "pamixer -t && zsh ~/.config/sxhkd/ewwvol.zsh" vol))))
+
+; (defwidget battery []
+;   (box :class "battery"
+;    "${battery-charging} ${battery}"))
+
+(defwidget right []
+  (box :class "right" :orientation "h" :space-evenly false :halign "end" :spacing 10
+    ;(battery)
+    (volume)
+    (wifi)
+    (time)))
+
+(defwindow bar
+  :monitor 0
+  :stacking "bg"
+  :geometry (geometry :x "0%"
+              :y "0%"
+              :width "99%"
+              :height "38px"
+              :anchor "top center")
+  :exclusive true
+  :focusable false
+  (bar))
+
+(defwindow wifipopup
+  :monitor 0
+  :stacking "fg"
+  :geometry (geometry :x "588px"
+                      :y "-4px"
+                      :width "300px"
+                      :anchor "top right")
+  :exclusive true
+  :focusable true
+  (wifipopupwidget))

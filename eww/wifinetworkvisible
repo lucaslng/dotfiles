@@ -1,0 +1,14 @@
+#!/bin/bash
+
+network=$1
+visible=$(jq --argjson network $network '.[($network)]."visible"' ~/.config/eww/networkjson.json)
+echo "$visible"
+if [ "$visible" = "true" ]
+then
+  echo "is true, turning to false"
+  jq --argjson network $network '.[($network)]."visible" |= false' ~/.config/eww/networkjson.json > ~/.config/eww/networkjson.json
+elif [ "$visible" = "false" ]
+then
+  echo "is false, turning to true"
+  jq --argjson network $network '.[($network)]."visible" |= true' ~/.config/eww/networkjson.json > ~/.config/eww/networkjson.json
+fi

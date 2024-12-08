@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+playerctl --follow --player spotify metadata xesam:title | while read -r uglytitle
+do # main loop, follows what song is playing on spotify and reads the title 
+
+    title=$(echo "$uglytitle" | cut -d '(' -f 1 | cut -d '.' -f 1 | cut -d '-' -f 1 | sed 's/\"//g' | sed 's/,//g' | sed 's/?//g') # title of song: Never Gonna Give You Up
+    artist=$(playerctl --player spotify metadata xesam:artist) # artist of song: Your Mom
+    exa lyrics | grep -q "$title" || python mxlrc.py -s "$artist","$title" --token 221230b353bb68cf7c25aeadeb89fd8f5e4788a1a3a3009b638f75 -q # check if .lrc file already exists, if not, download it using python script
+	file=${$(exa lyrics | grep "$title")/\'/}
+    lyrics=$(sed -n '6,$p' "/home/lucas/.config/eww/lyrics/$file") # entire lyrics file: [00:00] blah blah blah
+    oldlyrics=""
+    newlyrics="-"
+	echo "$uglytitle"
+    while [ "$uglytitle" = "$(playerctl --player spotify metadata xesam:title)" ] # loop is needed so it knows to go onto another lrc file when the song changes
+    do
+		echo "hi"
+        newlyrics=$(echo "$lyrics" | grep $(playerctl --player spotify position --format "{{ duration(position) }}") | cut -c 11- | tr -d '\n') # the next line of lyrics, ready to be displayed
+        if [ "$oldlyrics" = "$newlyrics" ] || [ "$newlyrics" = "" ] ; then
+            sleep 1 # checks if the lyrics have changed
+        elif [ "$oldlyrics" != "$newlyrics" ]
+        then
+            eww update lrcr=false # controls the fading effect
+            sleep 0.3
+            echo "$newlyrics" # displays lyrics for eww
+            eww update lrcr=true
+            oldlyrics=$newlyrics # updates the lyrics
+            echo $oldlyrics
+            sleep 0.7
+        fi
+    done
+done

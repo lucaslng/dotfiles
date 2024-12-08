@@ -1,0 +1,6 @@
+#!/bin/bash
+
+tiramisu --format=#hints | awk 'BEGIN { FS="," } {print $4}' | while read -r line
+do 
+    convert "inline:data:image/jpeg;base64,'$line'" output.jpg
+done
